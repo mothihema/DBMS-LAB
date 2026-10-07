@@ -1,0 +1,89 @@
+CREATE TABLE Student(
+RollNo NUMBER PRIMARY KEY,
+Name VARCHAR2(30),
+Branch VARCHAR2(20),
+Marks NUMBER CHECK(Marks>=0 AND Marks<=100)
+);
+INSERT INTO Student VALUES (101,'Akhil','CSE',95);
+INSERT INTO Student VALUES (102,'Bhavana','ECE',88);
+INSERT INTO Student VALUES (103,'Charan','CSE',91);
+INSERT INTO Student VALUES (104,'Divya','EEE',85);
+INSERT INTO Student VALUES (105,'Eswar','CSE',97);
+INSERT INTO Student VALUES (106,'Farah','ECE',80);
+INSERT INTO Student VALUES (107,'Ganesh','CSE',89);
+INSERT INTO Student VALUES (108,'Harika','IT',93);
+SELECT * FROM Student;
+
+SELECT RollNo, Name, Marks
+FROM Student
+WHERE Marks > ANY
+(
+SELECT Marks
+FROM Student
+WHERE Branch='CSE'
+);
+
+SELECT *
+FROM Student
+WHERE Branch IN ('CSE','IT');
+
+SELECT Name
+FROM Student S
+WHERE EXISTS
+(
+SELECT *
+FROM Student
+WHERE Marks>95
+);
+
+SELECT Name
+FROM Student S
+WHERE NOT EXISTS
+(
+SELECT *
+FROM Student
+WHERE Marks<35
+);
+
+SELECT Name
+FROM Student
+WHERE Branch='CSE'
+
+UNION
+
+SELECT Name
+FROM Student
+WHERE Branch='ECE';
+
+SELECT Name
+FROM Student
+WHERE Marks>90
+
+INTERSECT
+
+SELECT Name
+FROM Student
+WHERE Branch='CSE';
+
+SELECT RollNo, Name, Marks
+FROM Student
+WHERE Marks =
+(
+SELECT DISTINCT Marks
+FROM
+(
+SELECT DISTINCT Marks
+FROM Student
+ORDER BY Marks DESC
+)
+WHERE ROWNUM<
+SELECT DISTINCT Marks
+FROM
+(
+SELECT DISTINCT Marks
+FROM Student
+ORDER BY Marks DESC
+)
+WHERE ROWNUM<=3
+);
+
