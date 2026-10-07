@@ -1,0 +1,103 @@
+SET SERVEROUTPUT ON;
+
+CREATE TABLE STUDENT (
+    STUDENT_ID NUMBER PRIMARY KEY,
+    STUDENT_NAME VARCHAR2(30),
+    BRANCH VARCHAR2(20),
+    SEMESTER NUMBER,
+    CGPA NUMBER(3,1),
+    SCHOLARSHIP_STATUS VARCHAR2(20)
+);
+
+INSERT INTO STUDENT VALUES
+(101, 'ANU', 'CSE', 3, 9.2, 'Not Eligible');
+
+INSERT INTO STUDENT VALUES
+(102, 'RAVI', 'CSE', 3, 8.5, 'Not Eligible');
+
+INSERT INTO STUDENT VALUES
+(103, 'SITA', 'CSE', 3, 9.5, 'Not Eligible');
+
+INSERT INTO STUDENT VALUES
+(104, 'RAHUL', 'ECE', 3, 9.1, 'Not Eligible');
+
+COMMIT;
+
+
+DECLARE
+
+    TYPE REF_CUR IS REF CURSOR;
+    RC REF_CUR;
+
+    CURSOR C1(B VARCHAR2) IS
+        SELECT STUDENT_ID, STUDENT_NAME, BRANCH,
+               SEMESTER, CGPA, SCHOLARSHIP_STATUS
+        FROM STUDENT
+        WHERE BRANCH = B
+        FOR UPDATE OF SCHOLARSHIP_STATUS;
+
+    V_ID STUDENT.STUDENT_ID%TYPE;
+    V_NAME STUDENT.STUDENT_NAME%TYPE;
+    V_BRANCH STUDENT.BRANCH%TYPE;
+    V_SEM STUDENT.SEMESTER%TYPE;
+    V_CGPA STUDENT.CGPA%TYPE;
+    V_STATUS STUDENT.SCHOLARSHIP_STATUS%TYPE;
+
+BEGIN
+
+    OPEN RC FOR
+        SELECT STUDENT_ID, STUDENT_NAME, BRANCH,
+               SEMESTER, CGPA, SCHOLARSHIP_STATUS
+        FROM STUDENT
+        WHERE BRANCH = 'CSE';
+
+    DBMS_OUTPUT.PUT_LINE('STUDENT DETAILS');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------');
+
+    LOOP
+        FETCH RC INTO V_ID, V_NAME, V_BRANCH,
+                      V_SEM, V_CGPA, V_STATUS;
+
+        EXIT WHEN RC%NOTFOUND;
+
+        DBMS_OUTPUT.PUT_LINE(
+            V_ID || '  ' || V_NAME ||
+            '  ' || V_BRANCH ||
+            '  Semester: ' || V_SEM ||
+            '  CGPA: ' || V_CGPA
+        );
+    END LOOP;
+
+    CLOSE RC;
+
+
+    OPEN C1('CSE');
+
+    LOOP
+
+        FETCH C1 INTO V_ID, V_NAME, V_BRANCH,
+                      V_SEM, V_CGPA, V_STATUS;
+
+        EXIT WHEN C1%NOTFOUND;
+
+        IF V_CGPA >= 9.0 THEN
+
+            UPDATE STUDENT
+            SET SCHOLARSHIP_STATUS = 'Eligible'
+            WHERE CURRENT OF C1;
+
+        END IF;
+
+    END LOOP;
+
+    CLOSE C1;
+
+    COMMIT;
+
+    DBMS_OUTPUT.PUT_LINE('-----------------------------');
+    DBMS_OUTPUT.PUT_LINE(
+        'Scholarship status updated successfully.'
+    );
+
+END;
+/

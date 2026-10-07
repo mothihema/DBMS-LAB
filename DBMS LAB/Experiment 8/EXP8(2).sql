@@ -1,0 +1,42 @@
+CREATE TABLE PATIENT
+(
+    PATIENT_ID NUMBER(5) PRIMARY KEY,
+    PATIENT_NAME VARCHAR2(30),
+    DEPARTMENT VARCHAR2(20),
+    DOCTOR_NAME VARCHAR2(30)
+);
+
+INSERT INTO PATIENT VALUES
+(101, 'Ravi', 'Cardiology', 'Dr. Kumar');
+
+INSERT INTO PATIENT VALUES
+(102, 'Anu', 'Neurology', 'Dr. Priya');
+
+INSERT INTO PATIENT VALUES
+(103, 'Sita', 'Cardiology', 'Dr. Ramesh');
+
+INSERT INTO PATIENT VALUES
+(104, 'Raj', 'Orthopedics', 'Dr. Arun');
+
+COMMIT;
+CREATE TABLE PATIENT
+(
+    PATIENT_ID NUMBER(5) PRIMARY KEY,
+    PATIENT_NAME VARCHAR2(30),
+    DEPARTMENT VARCHAR2(20),
+    DOCTOR_NAME VARCHAR2(30)
+);
+
+INSERT INTO PATIENT VALUES
+(101, 'Ravi', 'Cardiology', 'Dr. Kumar');
+
+INSERT INTO PATIENT VALUES
+(102, 'Anu', 'Neurology', 'Dr. Priya');
+
+INSERT INTO PATIENT VALUES
+(103, 'Sita', 'Cardiology', 'Dr. Ramesh');
+
+INSERT INTO PATIENT VALUES
+(104, 'Raj', 'Orthopedics', 'Dr. Arun');
+
+COMMIT;
